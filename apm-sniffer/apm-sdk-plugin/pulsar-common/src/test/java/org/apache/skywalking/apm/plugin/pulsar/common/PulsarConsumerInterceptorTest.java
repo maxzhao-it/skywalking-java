@@ -18,12 +18,6 @@
 
 package org.apache.skywalking.apm.plugin.pulsar.common;
 
-import static org.apache.skywalking.apm.network.trace.component.ComponentsDefine.PULSAR_CONSUMER;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import java.util.List;
 import org.apache.pulsar.client.impl.LookupService;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
@@ -46,10 +40,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
-@RunWith(TracingSegmentRunner.class)
+import static org.apache.skywalking.apm.network.trace.component.ComponentsDefine.PULSAR_CONSUMER;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(TracingSegmentRunner.class)
 public class PulsarConsumerInterceptorTest {
 
     @SegmentStoragePoint
@@ -57,8 +58,6 @@ public class PulsarConsumerInterceptorTest {
 
     @Rule
     public AgentServiceRule serviceRule = new AgentServiceRule();
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
 
     private MockMessage msg;
 
@@ -149,14 +148,14 @@ public class PulsarConsumerInterceptorTest {
     }
 
     private EnhancedInstance mockConsumer() throws Throwable {
-        MockConsumerImpl pulsarProducerInstance = mock(MockConsumerImpl.class);
-        final LookupService lookup = mock(LookupService.class);
-        final PulsarClientImpl client = mock(PulsarClientImpl.class);
-        when(lookup.getServiceUrl()).thenReturn("pulsar://localhost:6650");
-        when(client.getLookup()).thenReturn(lookup);
-        when(pulsarProducerInstance.getClient()).thenReturn(client);
-        when(pulsarProducerInstance.getTopic()).thenReturn("persistent://my-tenant/my-ns/my-topic");
-        when(pulsarProducerInstance.getSkyWalkingDynamicField()).thenReturn("my-sub");
+        EnhancedInstance pulsarProducerInstance = PowerMockito.mock(MockConsumerImpl.class);
+        final LookupService lookup = PowerMockito.mock(LookupService.class);
+        final PulsarClientImpl client = PowerMockito.mock(PulsarClientImpl.class);
+        PowerMockito.when(lookup, "getServiceUrl").thenReturn("pulsar://localhost:6650");
+        PowerMockito.when(client, "getLookup").thenReturn(lookup);
+        PowerMockito.when(pulsarProducerInstance, "getClient").thenReturn(client);
+        PowerMockito.when(pulsarProducerInstance, "getTopic").thenReturn("persistent://my-tenant/my-ns/my-topic");
+        PowerMockito.when(pulsarProducerInstance, "getSkyWalkingDynamicField").thenReturn("my-sub");
         return pulsarProducerInstance;
     }
 }

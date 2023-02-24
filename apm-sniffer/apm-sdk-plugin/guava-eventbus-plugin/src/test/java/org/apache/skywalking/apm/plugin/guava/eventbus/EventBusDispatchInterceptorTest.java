@@ -21,45 +21,33 @@ package org.apache.skywalking.apm.plugin.guava.eventbus;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 import org.apache.skywalking.apm.agent.core.context.ContextManager;
 import org.apache.skywalking.apm.agent.core.context.ContextSnapshot;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.MockitoRule;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(ContextManager.class)
 public class EventBusDispatchInterceptorTest {
 
     private EventBusDispatchInterceptor interceptor;
     private Object originalEventObj;
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
-
     @Mock
     private ContextSnapshot contextSnapshot;
-
-    private MockedStatic<ContextManager> mockedContextManager;
 
     @Before
     public void setUp() throws Exception {
         interceptor = new EventBusDispatchInterceptor();
         originalEventObj = new Object();
-
-        mockedContextManager = Mockito.mockStatic(ContextManager.class);
-        mockedContextManager.when(ContextManager::capture).thenReturn(contextSnapshot);
-    }
-
-    @After
-    public void tearDown() {
-        mockedContextManager.close();
+        mockStatic(ContextManager.class);
+        when(ContextManager.capture()).thenReturn(contextSnapshot);
     }
 
     @Test

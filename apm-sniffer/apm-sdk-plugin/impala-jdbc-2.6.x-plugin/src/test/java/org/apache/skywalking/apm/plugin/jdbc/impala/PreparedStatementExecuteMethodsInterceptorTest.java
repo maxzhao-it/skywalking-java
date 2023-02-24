@@ -18,10 +18,6 @@
 
 package org.apache.skywalking.apm.plugin.jdbc.impala;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-import java.lang.reflect.Method;
 import org.apache.skywalking.apm.agent.core.context.trace.AbstractTracingSpan;
 import org.apache.skywalking.apm.agent.core.context.trace.SpanLayer;
 import org.apache.skywalking.apm.agent.core.context.trace.TraceSegment;
@@ -43,10 +39,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
-@RunWith(TracingSegmentRunner.class)
+import java.lang.reflect.Method;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.powermock.api.mockito.PowerMockito.when;
+
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(TracingSegmentRunner.class)
 public class PreparedStatementExecuteMethodsInterceptorTest {
 
     private static final String SQL = "Select * from test where id = ?";
@@ -56,8 +59,6 @@ public class PreparedStatementExecuteMethodsInterceptorTest {
 
     @Rule
     public AgentServiceRule serviceRule = new AgentServiceRule();
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
 
     private PreparedStatementExecuteMethodsInterceptor serviceMethodInterceptor;
 
@@ -113,7 +114,7 @@ public class PreparedStatementExecuteMethodsInterceptorTest {
         assertThat(SegmentHelper.getSpans(segment).size(), is(1));
         AbstractTracingSpan span = SegmentHelper.getSpans(segment).get(0);
         SpanAssert.assertLayer(span, SpanLayer.DB);
-        assertThat(span.getOperationName(), is("Impala/JDBC/PreparedStatement/executeQuery"));
+        assertThat(span.getOperationName(), is("Impala/JDBC/PreparedStatement/"));
         SpanAssert.assertTag(span, 0, "Impala");
         SpanAssert.assertTag(span, 1, "test");
         SpanAssert.assertTag(span, 2, SQL);
@@ -143,7 +144,7 @@ public class PreparedStatementExecuteMethodsInterceptorTest {
         assertThat(SegmentHelper.getSpans(segment).size(), is(1));
         AbstractTracingSpan span = SegmentHelper.getSpans(segment).get(0);
         SpanAssert.assertLayer(span, SpanLayer.DB);
-        assertThat(span.getOperationName(), is("Impala/JDBC/PreparedStatement/executeQuery"));
+        assertThat(span.getOperationName(), is("Impala/JDBC/PreparedStatement/"));
         SpanAssert.assertTag(span, 0, "Impala");
         SpanAssert.assertTag(span, 1, "test");
         SpanAssert.assertTag(span, 2, "Select * f...");

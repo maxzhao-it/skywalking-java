@@ -50,7 +50,6 @@ public class CaseController {
 
         try (RedisTransactionCommandExecutor command = new RedisTransactionCommandExecutor(redisHost, redisPort)) {
             command.multiExecute();
-            command.multiDiscard();
         }
         try (RedisStreamCommandExecutor executor = new RedisStreamCommandExecutor(redisHost, redisPort)) {
             executor.exec();

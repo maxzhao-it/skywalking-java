@@ -48,10 +48,8 @@ segmentItems:
             peer: not null
             skipAnalysis: false
             tags:
-              - {key: cache.type, value: Redis}
-              - {key: cache.key, value: key}
-              - {key: cache.cmd, value: GET}
-              - {key: cache.op, value: read}
+              - {key: db.type, value: Redis}
+              - {key: db.statement, value: GET key<key>}
           - operationName: Lettuce/SET
             parentSpanId: 0
             spanId: 2
@@ -64,10 +62,8 @@ segmentItems:
             peer: not null
             skipAnalysis: false
             tags:
-              - { key: cache.type, value: Redis }
-              - { key: cache.key, value: key0 }
-              - { key: cache.cmd, value: SET }
-              - { key: cache.op, value: write }
+              - {key: db.type, value: Redis}
+              - {key: db.statement, value: SET key<key0> value<value0>}
           - operationName: Lettuce/SET
             parentSpanId: 0
             spanId: 3
@@ -80,10 +76,8 @@ segmentItems:
             peer: not null
             skipAnalysis: false
             tags:
-              - { key: cache.type, value: Redis }
-              - { key: cache.key, value: key1 }
-              - { key: cache.cmd, value: SET }
-              - { key: cache.op, value: write }
+              - {key: db.type, value: Redis}
+              - {key: db.statement, value: SET key<key1> value<value1>}
           - operationName: GET:/lettuce-scenario/case/lettuce-case
             parentSpanId: -1
             spanId: 0

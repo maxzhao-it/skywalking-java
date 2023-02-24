@@ -18,10 +18,12 @@
 
 package org.apache.skywalking.apm.agent.core.kafka;
 
-import static org.junit.Assert.assertEquals;
-import java.lang.reflect.Method;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
+import org.powermock.reflect.Whitebox;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.Assert.assertEquals;
 
 public class KafkaProducerManagerTest {
     @Test
@@ -32,11 +34,7 @@ public class KafkaProducerManagerTest {
         for (int i = 0; i < times; i++) {
             kafkaProducerManager.addListener(new MockListener(counter));
         }
-        Method notifyListeners = kafkaProducerManager
-            .getClass()
-            .getDeclaredMethod("notifyListeners", KafkaConnectionStatus.class);
-        notifyListeners.setAccessible(true);
-        notifyListeners.invoke(kafkaProducerManager, KafkaConnectionStatus.CONNECTED);
+        Whitebox.invokeMethod(kafkaProducerManager, "notifyListeners", KafkaConnectionStatus.CONNECTED);
 
         assertEquals(counter.get(), times);
     }

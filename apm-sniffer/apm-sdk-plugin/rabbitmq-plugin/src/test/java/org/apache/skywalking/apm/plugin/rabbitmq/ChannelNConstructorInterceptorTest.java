@@ -35,11 +35,14 @@ import org.apache.skywalking.apm.agent.test.tools.TracingSegmentRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-@RunWith(TracingSegmentRunner.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(TracingSegmentRunner.class)
 public class ChannelNConstructorInterceptorTest {
 
     private ChannelNConstructorInterceptor channelNConstructorInterceptor;
